@@ -1,14 +1,32 @@
 <!doctype html>
 <html>
   <head>
-    <title>Real Time</title>
+    <title>Crowd Source It</title>
   </head>
   <body>
 
-    <h1>Real Time</h1>
+    <h1>Crowd Source It</h1>
 
-    <section class="messages">
+    <section class="response-fields">
+      <form>
+        <select class="show-responses">
+          <option value="false">Don't show responses</option>
+          <option value="true">Show responses</option>
+        </select>
+        <input placeholder="Enter response type" class="response">
+      </form>
     </section>
+
+    <form>
+      <input type="submit" value="Add Another Field" class="add-response">
+    </form>
+
+    <section class="responses">
+    </section>
+
+    <form>
+      <input type="submit" value="Create Survey" class="create-survey">
+    </form>
 
     <script src="/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
