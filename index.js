@@ -11,6 +11,10 @@ app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
+app.get('/votes', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public/votes.html'));
+});
+
 http.listen(process.env.PORT || 3000, function() {
   console.log("up and running");
 });
