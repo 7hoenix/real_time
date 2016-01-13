@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Crowd Source It: Vote Now</title>
+  </head>
+  <body>
+
+    <div id="votes">
+      <h1>Vote for one of the options below</h1>
+
+      <section class="response-choices">
+        <form id="selections">
+          <input type="radio" name="response" value="option 1">Option 1<br>
+          <input type="radio" name="response" value="option 2">Option 2<br>
+          <input type="radio" name="response" value="option 3">Option 3<br>
+        </form>
+      </section>
+
+      <form>
+        <input type="submit" value="Vote" class="vote-button">
+      </form>
+    </div>
+
+    <script src="/jquery.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/application.js"></script>
+
+  </body>
+</html>
