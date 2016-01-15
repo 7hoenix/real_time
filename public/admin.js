@@ -1,7 +1,3 @@
-$(document).on('ready', function () {
-  debugger
-})
-
 const socket = io();
 
 const connectionCount = document.getElementById('connection-count');
@@ -27,21 +23,3 @@ for (var i = 0; i < buttons.length; i++) {
     socket.send('voteCast', this.innerText);
   });
 }
-
-const myResponses = {};
-
-$('#votes').on('load', function (e) {
-  e.preventDefault();
-
-  //$('.response-fields form').append(`<input placeholder="Enter response type"
-                                     //class="response">`)
-  //<input type="radio" name="response" value="option 1">Option 1<br>
-  //<input type="radio" name="response" value="option 2">Option 2<br>
-  //<input type="radio" name="response" value="option 3">Option 3<br>
-})
-
-$('.vote-button').on('click', function (e) {
-  e.preventDefault();
-
-  var selection = $('input[name=response]:checked', '#selections').val();
-});
