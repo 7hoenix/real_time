@@ -1,0 +1,18 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+  body
+    h1= survey.title
+    #connection-count
+    #status-message
+    #urls
+      survey.urls.adminUrl
+      survey.urls.adminUrl
+    .survey-choices
+      each val in survey.inputs
+        button= val
+    script(src="/jquery.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/lodash.js")
+    script(src="/admin.js")
