@@ -1,0 +1,19 @@
+doctype html
+html
+  head
+    title= title
+  body
+    h1= survey.title
+    #survey-id
+      p= survey.id
+    h4 Vote for one of the options below
+    #connection-count
+    #status-message
+    #results
+    #survey-choices
+      each val in survey.inputs
+        button= val
+    script(src="/jquery.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/lodash.js")
+    script(src="/survey.js")
