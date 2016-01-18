@@ -13,10 +13,7 @@
     <section class="response-fields">
       <form action="/surveys" method="post">
         <input placeholder="Question" name="title">
-        <select class="show-responses">
-          <option value="false">Don't show responses</option>
-          <option value="true">Show responses</option>
-        </select>
+        <input type="checkbox" name="showR" checked>Show responses
         <div id="inputs">
           <input placeholder="Enter response type" name="inputs[0]" class="response">
           <input placeholder="Enter response type" name="inputs[1]" class="response">
