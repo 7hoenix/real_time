@@ -3,13 +3,19 @@ html(lang="en")
   head
     title= title
   body
-    h1= survey.title
+    h1 Admin Dashboard
     #connection-count
     #status-message
+    #survey-id
+      p= survey.id
     #urls
-      survey.urls.adminUrl
-      survey.urls.adminUrl
-    .survey-choices
+      h3 Send this link out to whomever you would like.
+      #[a(href=survey.urls.surveyUrl) #{survey.urls.surveyUrl}]
+      h3 This link is for you to get back here.
+      #[a(href=survey.urls.adminUrl) #{survey.urls.adminUrl}]
+    h1= survey.title
+    #results
+    #survey-choices
       each val in survey.inputs
         button= val
     script(src="/jquery.js")
