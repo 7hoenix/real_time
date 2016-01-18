@@ -14,8 +14,6 @@ app.set('port', process.env.PORT || 3000);
 app.locals.title = "Crowd Source It";
 app.locals.surveys = {};
 
-const surveys = {};
-
 app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
@@ -23,14 +21,12 @@ app.get('/', function(req, res) {
 app.post('/surveys', function(req, res) {
   var surveyId = generateId();
   var survey = app.locals.surveys[surveyId] = {};
+  survey.id = surveyId;
   survey.urls = generateUrls(surveyId);
   survey.title = req.body.title;
   survey.inputs = req.body.inputs;
-  var votes = {};
-  survey.inputs.forEach(function (input) {
-    votes[input] = 0;
-  })
-  survey.votes = votes;
+  survey.showResponseToUsers = req.body.showR === "on" ? true : false
+  survey.votes = {};
   res.redirect(survey.urls.adminUrl)
 });
 
@@ -38,13 +34,12 @@ app.get('/surveys/admin/:survey_id/:admin_id', function(req, res) {
   var survey = app.locals.surveys[req.params.survey_id];
 
   res.render('admin', {survey: survey});
-  //res.sendFile(path.join(__dirname, 'public/admin.html'));
 })
 
 app.get('/surveys/:survey_id', function(req, res) {
   var survey = app.locals.surveys[req.params.survey_id];
 
-  res.sendFile(path.join(__dirname, 'public/survey.html'));
+  res.render('survey', {survey: survey});
 });
 
 const port = process.env.PORT || 3000;
@@ -64,51 +59,28 @@ io.on('connection', function (socket) {
   socket.emit('statusMessage', 'You have connected.');
 
   socket.on('message', function (channel, message, surveyId) {
-    if (channel === 'voteCast') {
+    if (channel.trim() === 'voteCast-' + surveyId) {
+      var survey = app.locals.surveys[surveyId];
 
-      //votes[socket.id] = message;
-      polls[surveyId][socket.id] = message;
-      io.sockets.emit('voteCount', countVotes(polls[channelInfo]));
+      survey.votes[socket.id] = message;
+      io.sockets.emit('voteCount-' + surveyId, countVotes(survey));
     }
   });
 
   socket.on('disconnect', function () {
     console.log('A user has disconnected.', io.engine.clientsCount);
-    delete votes[socket.id];
-    console.log(votes);
     io.sockets.emit('usersConnected', io.engine.clientsCount);
   });
 });
 
-function generateID () {
-  debugger
-  var lastResponse = _.last(myResponses);
-  return lastResponseid++;
-}
+function countVotes(survey) {
+  var voteCount = {};
+  survey.inputs.forEach(function (input) {
+    voteCount[input] = 0;
+  })
 
-function createSurvey () {
-  $('.create-survey').on('click', function (e) {
-    e.preventDefault();
-
-    var id = generateID();
-    myResponse[id] = [];
-    var responses = $('.response-fields .response')
-    var showResponses = $('.response-fields .show-responses').val();
-    responses.each(function () {
-      myResponses[id].push($( this ).val());
-    });
-  });
-}
-
-function countVotes(votes) {
-  var voteCount = {
-    A: 0,
-    B: 0,
-    C: 0,
-    D: 0
-  };
-  for (vote in votes) {
-    voteCount[votes[vote]]++
+  for (vote in survey.votes) {
+    voteCount[survey.votes[vote]]++
   }
     return voteCount;
 }
