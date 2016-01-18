@@ -3,8 +3,11 @@ const app = express();
 const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
-const generateId = require('./public/generate-id')
-const generateUrls = require('./public/generate-urls')
+const generateId = require('./public/generate-id');
+const generateUrls = require('./public/generate-urls');
+const moment = require('moment');
+
+moment().format();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
@@ -27,6 +30,7 @@ app.post('/surveys', function(req, res) {
   survey.inputs = req.body.inputs;
   survey.showResponseToUsers = req.body.showR === "on" ? true : false
   survey.votes = {};
+  survey.open = true;
   res.redirect(survey.urls.adminUrl)
 });
 
@@ -62,8 +66,24 @@ io.on('connection', function (socket) {
     if (channel.trim() === 'voteCast-' + surveyId) {
       var survey = app.locals.surveys[surveyId];
 
-      survey.votes[socket.id] = message;
-      io.sockets.emit('voteCount-' + surveyId, countVotes(survey));
+      if (survey.open) {
+        survey.votes[socket.id] = message;
+        io.sockets.emit('voteCount-' + surveyId, countVotes(survey));
+      }
+    } else if (channel.trim() === 'setTimer-' + surveyId) {
+      var survey = app.locals.surveys[surveyId];
+
+      survey.countdownTime = {
+        hours: message.hours,
+        minutes: message.minutes,
+        seconds: message.seconds
+      };
+
+      io.sockets.emit('countdownTimer-' + surveyId, survey.countdownTime)
+    } else if (channel.trim() === 'stopSurvey-' + surveyId) {
+      var survey = app.locals.surveys[surveyId];
+      survey.open = false;
+      io.sockets.emit('voteTotal-' + surveyId, countVotes(survey));
     }
   });
 
