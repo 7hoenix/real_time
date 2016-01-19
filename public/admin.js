@@ -4,12 +4,12 @@ const connectionCount = document.getElementById('connection-count');
 const statusMessage = document.getElementById('status-message');
 const choices = document.getElementById('survey-choices')
 const countedVotes = document.getElementById('results');
-const surveyId = document.getElementById('survey-id').innerText;
+const surveyId = document.getElementById('survey-id').innerText.trim();
 const timeOptions = document.getElementById('time-options');
 const endNowButton = document.getElementById('end-now-button');
 const countdown = document.getElementById('countdown');
 
-socket.on('voteCount-' + surveyId.trim(), function (votes) {
+socket.on('voteCount-' + surveyId, function (votes) {
   if (countedVotes.children.length > 0) {
     while (countedVotes.firstChild) {
       countedVotes.removeChild(countedVotes.firstChild);
@@ -23,7 +23,7 @@ socket.on('voteCount-' + surveyId.trim(), function (votes) {
   }
 });
 
-socket.on('countdownTimer-' + surveyId.trim(), function (timeLeft) {
+socket.on('countdownTimer-' + surveyId, function (timeLeft) {
   timeOptions.className += "hidden";
   endNowButton.className += "hidden";
   setCountdownTimer(timeLeft);
@@ -45,16 +45,20 @@ function setCountdownTimer(countdownTime) {
   var counting = setInterval(function () {
       timestamp = new Date(timestamp.getTime() + interval * 1000);
       duration = moment.duration(duration.asSeconds() - interval, 'seconds');
-      $('#countdown').text(duration.hours() + 'h:' + duration.minutes() + 'm:' + duration.seconds() + 's');
+      $('#countdown').text(
+        duration.hours() + 'h:' +
+        duration.minutes() + 'm:' +
+        duration.seconds() + 's'
+      );
       if (duration < 1) {
         $('#countdown').text('DONE');
         clearInterval(counting);
-        socket.send('stopSurvey-' + surveyId.trim(), "stop it", surveyId.trim());
+        socket.send('stopSurvey-' + surveyId, "stop it", surveyId);
       }
   }, 1000);
 }
 
-socket.on('voteTotal-' + surveyId.trim(), function (votes) {
+socket.on('voteTotal-' + surveyId, function (votes) {
   if (countedVotes.children.length > 0) {
     while (countedVotes.firstChild) {
       countedVotes.removeChild(countedVotes.firstChild);
@@ -89,10 +93,10 @@ timeOptions.getElementsByTagName('button')[0]
         break;
     }
   }
-  socket.send('setTimer-' + surveyId.trim(), time, surveyId.trim());
+  socket.send('setTimer-' + surveyId, time, surveyId);
 });
 
 endNowButton.getElementsByTagName('button')[0]
             .addEventListener('click', function() {
-  socket.send('stopSurvey-' + surveyId.trim(), "cake", surveyId.trim());
+  socket.send('stopSurvey-' + surveyId, "stop", surveyId);
 });
