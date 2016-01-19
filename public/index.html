@@ -7,30 +7,27 @@
 
     <h1>Crowd Source It</h1>
 
+    <div id="connection-count"></div>
+    <div id="status-message"></div>
+
     <section class="response-fields">
-      <form>
-        <select class="show-responses">
-          <option value="false">Don't show responses</option>
-          <option value="true">Show responses</option>
-        </select>
-        <input placeholder="Enter response type" class="response">
+      <form action="/surveys" method="post">
+        <input placeholder="Question" name="title">
+        <input type="checkbox" name="showR" checked>Show responses
+        <div id="inputs">
+          <input placeholder="Enter response type" name="inputs[0]" class="response">
+          <input placeholder="Enter response type" name="inputs[1]" class="response">
+        </div>
+        <input type="submit" value="Create Survey" class="create-survey">
       </form>
     </section>
 
-    <form>
-      <input type="submit" value="Add Another Field" class="add-response">
-    </form>
-
-    <section class="responses">
-    </section>
-
-    <form>
-      <input type="submit" value="Create Survey" class="create-survey">
-    </form>
+    <button class="add-response">Add Another Response</button>
 
     <script src="/jquery.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="/application.js"></script>
+    <script src="/lodash.js"></script>
+    <script src="/index.js"></script>
 
   </body>
 </html>

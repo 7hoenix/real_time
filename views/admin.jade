@@ -1,0 +1,40 @@
+doctype html
+html(lang="en")
+  head
+    title= title
+    style
+      include ../public/style.css
+  body
+    h1 Admin Dashboard
+    #connection-count
+    #status-message
+    #survey-id
+      p= survey.id
+    #urls
+      h3 Send this link out to whomever you would like.
+      #[a(href=survey.urls.surveyUrl) #{survey.urls.surveyUrl}]
+      h3 This link is for you to get back here.
+      #[a(href=survey.urls.adminUrl) #{survey.urls.adminUrl}]
+    #time-options
+      h2 Want to set a time to end your survey?
+      label Hours
+      input(type="text", name="hours", value="")
+      label Minutes
+      input(type="text", name="minutes", value="")
+      label Seconds
+      input(type="text", name="seconds", value="")
+      button Set End of Survey Timer
+    #countdown
+    #end-now-button
+      button End Survey Now
+    h1 Results
+    h1= survey.title
+    #results
+    #survey-choices
+      each val in survey.inputs
+        button= val
+    script(src="/jquery.js")
+    script(src="/socket.io/socket.io.js")
+    script(src="/lodash.js")
+    script(src="/admin.js")
+    script(src="/moment.js")
