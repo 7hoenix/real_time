@@ -28,7 +28,7 @@ app.post('/surveys', function(req, res) {
   survey.urls = generateUrls(surveyId);
   survey.title = req.body.title;
   survey.inputs = req.body.inputs;
-  survey.showResponseToUsers = req.body.showR === "on" ? true : false
+  survey.showResults = req.body.showR === "on" ? true : false
   survey.votes = {};
   survey.open = true;
   res.redirect(survey.urls.adminUrl)
@@ -68,7 +68,7 @@ io.on('connection', function (socket) {
 
       if (survey.open) {
         survey.votes[socket.id] = message;
-        io.sockets.emit('voteCount-' + surveyId, countVotes(survey));
+        io.sockets.emit('voteCount-' + surveyId, countVotes(survey), survey.showResults);
       }
     } else if (channel.trim() === 'setTimer-' + surveyId) {
       var survey = app.locals.surveys[surveyId];
