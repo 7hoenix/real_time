@@ -3,17 +3,19 @@ html
   head
     title= title
   body
-    h1= survey.title
-    #survey-id
-      p= survey.id
     h4 Vote for one of the options below
     #connection-count
     #status-message
+    #countdown
+    h1= survey.title
     #results
     #survey-choices
       each val in survey.inputs
         button= val
+    #survey-id
+      p= survey.id
     script(src="/jquery.js")
     script(src="/socket.io/socket.io.js")
     script(src="/lodash.js")
     script(src="/survey.js")
+    script(src="/moment.js")
