@@ -23,15 +23,16 @@ app.get('/', function(req, res) {
 
 app.post('/surveys', function(req, res) {
   var surveyId = generateId();
-  var survey = app.locals.surveys[surveyId] = {};
-  survey.id = surveyId;
-  survey.urls = generateUrls(surveyId);
-  survey.title = req.body.title;
-  survey.inputs = req.body.inputs;
-  survey.showResults = req.body.showR === "on" ? true : false
-  survey.votes = {};
-  survey.open = true;
-  res.redirect(survey.urls.adminUrl)
+  app.locals.surveys[surveyId] = {
+    id: surveyId,
+    urls: generateUrls(surveyId),
+    title: req.body.title,
+    inputs: req.body.inputs,
+    showResults: req.body.showR === "on",
+    votes: {},
+    open: true
+  };
+  res.redirect(app.locals.surveys[surveyId].urls.adminUrl)
 });
 
 app.get('/surveys/admin/:survey_id/:admin_id', function(req, res) {
