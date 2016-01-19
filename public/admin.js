@@ -91,3 +91,8 @@ timeOptions.getElementsByTagName('button')[0]
   }
   socket.send('setTimer-' + surveyId.trim(), time, surveyId.trim());
 });
+
+endNowButton.getElementsByTagName('button')[0]
+            .addEventListener('click', function() {
+  socket.send('stopSurvey-' + surveyId.trim(), "cake", surveyId.trim());
+});
