@@ -12,17 +12,19 @@ socket.on('usersConnected' + surveyId, function (count) {
   connectionCount.innerText = count;
 });
 
-socket.on('voteCount-' + surveyId.trim(), function (votes) {
-  if (countedVotes.children.length > 0) {
-    while (countedVotes.firstChild) {
-      countedVotes.removeChild(countedVotes.firstChild);
+socket.on('voteCount-' + surveyId.trim(), function (votes, showResults) {
+  if (showResults) {
+    if (countedVotes.children.length > 0) {
+      while (countedVotes.firstChild) {
+        countedVotes.removeChild(countedVotes.firstChild);
+      }
     }
-  }
-  for (vote in votes) {
-    var node = document.createElement('DIV');
-    var textnode = document.createTextNode(vote + ': ' + votes[vote]);
-    node.appendChild(textnode);
-    countedVotes.appendChild(node);
+    for (vote in votes) {
+      var node = document.createElement('DIV');
+      var textnode = document.createTextNode(vote + ': ' + votes[vote]);
+      node.appendChild(textnode);
+      countedVotes.appendChild(node);
+    }
   }
 });
 
@@ -57,22 +59,24 @@ function setCountdownTimer(countdownTime) {
   }, 1000);
 }
 
-socket.on('voteTotal-' + surveyId.trim(), function (votes) {
-  if (countedVotes.children.length > 0) {
-    while (countedVotes.firstChild) {
-      countedVotes.removeChild(countedVotes.firstChild);
+socket.on('voteTotal-' + surveyId.trim(), function (votes, showResults) {
+  if (showResults) {
+    if (countedVotes.children.length > 0) {
+      while (countedVotes.firstChild) {
+        countedVotes.removeChild(countedVotes.firstChild);
+      }
     }
+    for (vote in votes) {
+      var node = document.createElement('DIV');
+      var textnode = document.createTextNode(vote + ': ' + votes[vote]);
+      node.appendChild(textnode);
+      countedVotes.appendChild(node);
+    }
+    var nodeMessage = document.createElement('DIV');
+    var textForMessage = document.createTextNode('VOTING CLOSED');
+    nodeMessage.appendChild(textForMessage);
+    countedVotes.appendChild(nodeMessage);
   }
-  for (vote in votes) {
-    var node = document.createElement('DIV');
-    var textnode = document.createTextNode(vote + ': ' + votes[vote]);
-    node.appendChild(textnode);
-    countedVotes.appendChild(node);
-  }
-  var nodeMessage = document.createElement('DIV');
-  var textForMessage = document.createTextNode('VOTING CLOSED');
-  nodeMessage.appendChild(textForMessage);
-  countedVotes.appendChild(nodeMessage);
 });
 
 for (var i = 0; i < buttons.length; i++) {
